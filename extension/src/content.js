@@ -145,11 +145,30 @@
 
   /* Whether a seller is worth a throttled request: the user asked for cities,
      or the country is unknown and a filter is active. */
+  /* Whether a seller is worth one of a limited number of requests.
+
+     Only cards the user can actually see qualify. Queueing the whole page meant
+     spending the rate limit on rows far below the fold and on results the
+     filter had already removed, and the queue length stopped meaning anything. */
   const needsLookup = (item) => {
+    if (!visible.has(item.id)) return false;
     const origin = originFor(item);
-    if (state.settings.showCity && !origin.city) return true;
+    // Unknown country with a filter on: the lookup decides whether to keep it.
     if (!origin.country && state.settings.selected.length > 0) return true;
+    // City was asked for, and this is a result the user is keeping.
+    if (state.settings.showCity && !origin.city && matches(origin)) return true;
     return false;
+  };
+
+  /* Visibility changes arrive in bursts while scrolling; coalesce them. */
+  let lookupTimer = null;
+  const scheduleLookups = () => {
+    if (lookupTimer) return;
+    lookupTimer = setTimeout(() => {
+      lookupTimer = null;
+      requestLookups();
+      redraw();
+    }, 250);
   };
 
   const requestLookups = () => {
@@ -157,7 +176,7 @@
     queued.forEach((item, index) => {
       const userId = item.user && item.user.id;
       if (!userId) return;
-      const priority = (visible.has(item.id) ? 1000 : 0) - index;
+      const priority = -index;               // topmost visible card first
       VLF_LOOKUP.resolve(userId, priority).then((result) => {
         if (!result) return;
         // One seller can have several items in the grid.
@@ -176,10 +195,14 @@
   const watchVisibility = (element) => {
     if (!watchVisibility.observer) {
       watchVisibility.observer = new IntersectionObserver((entries) => {
+        let changed = false;
         entries.forEach((entry) => {
           const id = Number(entry.target.dataset.itemId);
+          const had = visible.has(id);
           entry.isIntersecting ? visible.add(id) : visible.delete(id);
+          if (visible.has(id) !== had) changed = true;
         });
+        if (changed) scheduleLookups();      // newly on screen, worth checking
       }, { rootMargin: '200px' });
       observers.push(watchVisibility.observer);
     }
@@ -331,6 +354,7 @@
     attempts = 0;
     prefetch = null;
     phase = 'idle';
+    if (lookupTimer) { clearTimeout(lookupTimer); lookupTimer = null; }
     VLF_UI.clearProgress();
     observers.forEach((observer) => observer.disconnect());
     observers = [];
