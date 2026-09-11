@@ -1,0 +1,159 @@
+/* Hiding is done with a global rule keyed off an attribute, never by editing
+   className on an element React owns: React resets props it manages on
+   re-render, and it would drop the class. */
+html[data-vlf-active] [data-vlf-hidden] { display: none !important; }
+
+.vlf-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0 16px;
+  padding: 10px 12px;
+  border: 1px solid rgba(0, 0, 0, .12);
+  border-radius: 10px;
+  background: #fff;
+  font: 14px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: #171717;
+  color-scheme: light;          /* the catalogue is light; never follow the OS */
+}
+.vlf-bar[data-filtered="true"] { border-color: #007782; }
+
+.vlf-picker { position: relative; }
+.vlf-picker__summary {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid rgba(0, 0, 0, .2);
+  border-radius: 999px;
+  cursor: pointer;
+  list-style: none;
+}
+.vlf-picker__summary::-webkit-details-marker { display: none; }
+.vlf-picker__label { color: #666; }
+.vlf-picker__value { font-weight: 600; }
+.vlf-picker__list {
+  position: absolute;
+  z-index: 2147482000;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 270px;
+  max-height: 340px;
+  overflow-y: auto;
+  padding: 6px;
+  border: 1px solid rgba(0, 0, 0, .12);
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .14);
+}
+.vlf-picker__note { margin: 6px 4px 2px; color: #666; font-size: 12px; }
+
+.vlf-option {
+  display: block;
+  width: 100%;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 7px;
+  background: none;
+  color: inherit;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+.vlf-option:hover { background: rgba(0, 0, 0, .05); }
+.vlf-option--on { background: #007782; color: #fff; font-weight: 600; }
+
+.vlf-modes {
+  display: inline-flex;
+  border: 1px solid rgba(0, 0, 0, .2);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.vlf-mode { padding: 6px 12px; border: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
+.vlf-mode--on { background: #007782; color: #fff; }
+
+.vlf-city { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.vlf-status { color: #666; font-size: 13px; }
+.vlf-coffee {
+  margin-left: auto;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #ffdd00;
+  color: #171717;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.vlf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 16px 12px;
+}
+@media (max-width: 640px) {
+  .vlf-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+}
+
+.vlf-card { display: flex; flex-direction: column; }
+.vlf-card--hidden { display: none; }
+.vlf-card--faded { opacity: .28; filter: grayscale(1); }
+.vlf-card--faded:hover { opacity: .75; filter: none; }
+
+.vlf-card__image { position: relative; display: block; aspect-ratio: 1 / 1; overflow: hidden; border-radius: 8px; background: #f2f2f2; }
+.vlf-card__image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.vlf-origin {
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+  max-width: calc(100% - 12px);
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, .72);
+  color: #fff;
+  font-size: 11px;
+  line-height: 1.5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.vlf-origin[data-state="guess"] { background: rgba(176, 106, 0, .88); }
+.vlf-origin[data-state="pending"] { background: rgba(0, 0, 0, .45); }
+
+.vlf-card__body { display: flex; flex-direction: column; gap: 1px; padding: 6px 2px 0; color: inherit; text-decoration: none; }
+.vlf-card__brand { font-size: 13px; color: #666; }
+.vlf-card__meta { font-size: 13px; color: #666; }
+.vlf-card__price { font-size: 14px; font-weight: 600; }
+.vlf-card__total { font-size: 13px; color: #007782; }
+
+.vlf-sentinel { height: 1px; }
+
+.vlf-progress {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  z-index: 2147483000;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 15px;
+  border-radius: 999px;
+  background: #171717;
+  color: #fff;
+  font: 13px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .28);
+}
+.vlf-progress__spin {
+  width: 12px;
+  height: 12px;
+  flex: none;
+  border: 2px solid rgba(255, 255, 255, .3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: vlf-spin .7s linear infinite;
+}
+.vlf-progress[data-busy="false"] .vlf-progress__spin {
+  border: 2px solid #4ade80;
+  animation: none;
+}
+@keyframes vlf-spin { to { transform: rotate(360deg); } }
