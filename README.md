@@ -89,6 +89,15 @@ a time as you scroll. Seller lookups are throttled, cached and capped. If you
 see "seller lookups paused", Vinted has started refusing them and the queue has
 stopped on purpose.
 
+## Store assets
+
+`docs/store/` holds the listing screenshots at 1280x800, 24-bit PNG with no
+alpha, which is what the Chrome Web Store accepts. They are generated from the
+originals in `docs/` with:
+
+    magick <source> -background white -alpha remove -alpha off \
+      -resize 1280x800 -gravity center -extent 1280x800 PNG24:<target>
+
 ## Packaging
 
 `python3 tools/package.py` writes `dist/vinted-location-filter-<version>.zip`,
