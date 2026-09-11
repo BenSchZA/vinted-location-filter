@@ -1,0 +1,62 @@
+Vinted lists items from sellers in other countries alongside local ones, and
+gives you no way to tell them apart or filter them out. A jacket that looks
+like a bargain can turn out to be shipping from another continent, with the
+postage and the wait that comes with it.
+
+This extension tags every search result with the seller's country and lets you
+keep only the countries you want.
+
+
+What it does
+
+Every result gets a country tag, so you can see at a glance where it ships
+from. Pick one or more countries and the rest are hidden, or faded if you would
+rather still see them. The list of countries is built from the search you are
+looking at, with a count beside each one, so it works on any Vinted site
+without a fixed country list.
+
+Controls sit in a bar above the results and in the toolbar popup. Both change
+the same setting, so you can use whichever is closer to hand.
+
+Results load continuously as you scroll instead of page by page.
+
+
+How it finds the seller's country
+
+Vinted's own search response carries the price the seller set and the currency
+they set it in. Where a currency belongs to one market, it identifies the
+country with no extra requests: GBP is the United Kingdom, SEK is Sweden, PLN
+is Poland, DKK is Denmark. This was checked against Vinted's seller records for
+44 sellers and matched every time.
+
+That means filtering is immediate and adds no load to Vinted.
+
+
+Where it is limited
+
+Around eighteen Vinted markets price in euros, so on those sites the currency
+cannot tell one country from another. A test search on the German site returned
+95 results in a single euro group holding both German and Dutch sellers. On
+euro sites the country has to come from a seller lookup instead, which is slow
+by design.
+
+City is optional and off by default. It needs one request per seller, and
+Vinted limits how quickly those can be made, so lookups are spaced out, cached,
+and stop rather than retrying if Vinted refuses them. Cities fill in while you
+scroll. Sellers who leave their city blank show the country only.
+
+A seller whose country cannot be read is never hidden. It gets an amber tag
+instead, so a filter cannot quietly cost you a listing.
+
+
+Privacy
+
+No account, no sign-up, no analytics. The extension talks to the Vinted site
+you already have open and nowhere else. Your settings and the seller cache are
+stored in your own browser.
+
+
+Open source
+
+Source code, and the measurements behind the numbers above:
+https://github.com/BenSchZA/vinted-location-filter
