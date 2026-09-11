@@ -10,6 +10,7 @@ window.VLF_UI = window.VLF_UI || (() => {
   let root = null;
   let pill = null;
   let handlers = {};
+  let outsideClosedBound = false;
 
   const el = (tag, className, text) => {
     const node = document.createElement(tag);
@@ -58,7 +59,37 @@ window.VLF_UI = window.VLF_UI || (() => {
 
     // Clicking a country should not also close the panel mid-update.
     root.addEventListener('click', (event) => event.stopPropagation());
+    bindOutsideClose();
     return root;
+  };
+
+  /* Close the country panel on a click anywhere outside it, or on Escape.
+
+     Bound once for the life of the page and read through `root`, so a remount
+     does not stack duplicate listeners. The click listener runs in the capture
+     phase for two reasons: a page handler cannot swallow the event before we
+     see it, and capture runs before the summary's own default toggle, so a
+     click on the summary is still handled natively rather than being closed
+     here and reopened. */
+  const bindOutsideClose = () => {
+    if (outsideClosedBound) return;
+    outsideClosedBound = true;
+
+    const openPicker = () => {
+      const picker = root && root.querySelector('.vlf-picker');
+      return picker && picker.open ? picker : null;
+    };
+
+    document.addEventListener('click', (event) => {
+      const picker = openPicker();
+      if (picker && !picker.contains(event.target)) picker.open = false;
+    }, true);
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+      const picker = openPicker();
+      if (picker) picker.open = false;
+    });
   };
 
   const option = (code, count, selected) => {
