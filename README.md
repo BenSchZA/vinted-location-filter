@@ -2,9 +2,9 @@
 
 A Chrome extension that filters Vinted search results by the seller's country.
 
-![The filter bar above Vinted search results, with every card tagged by country and city and non-matching sellers faded out](docs/screenshot-on-page.png)
+![The filter bar above Vinted search results, with every card tagged by country and city and non-matching sellers faded out](docs/store/1-results.png)
 
-![The toolbar popup listing the countries present in the current search with a result count beside each one](docs/screenshot-extension.png)
+![The toolbar popup listing the countries present in the current search with a result count beside each one](docs/store/2-popup.png)
 
 Vinted sells across borders but gives you no way to filter by where the seller
 is. On a UK search for "Patagonia rain jacket", 44 of the first 95 results were
@@ -91,9 +91,18 @@ stopped on purpose.
 
 ## Store assets
 
-`docs/store/` holds the listing screenshots at 1280x800, 24-bit PNG with no
-alpha, which is what the Chrome Web Store accepts. They are generated from the
-originals in `docs/` with:
+`docs/store/` holds the listing assets, all 24-bit PNG with no alpha, which is
+what the Chrome Web Store accepts:
+
+- `1-results.png`, `2-popup.png` at 1280x800, the screenshots
+- `promo-small-440x280.png` and `promo-marquee-1400x560.png`, the promo tiles
+
+`python3 tools/make-promo.py` regenerates the two tiles and verifies the PNG
+header of each. It needs Roboto Regular and Roboto Medium in `~/Library/Fonts`
+and fails with a clear message if they are missing. Output is byte-stable, so
+regenerating an unchanged tile produces no diff.
+
+A screenshot taken at another size can be converted with:
 
     magick <source> -background white -alpha remove -alpha off \
       -resize 1280x800 -gravity center -extent 1280x800 PNG24:<target>
