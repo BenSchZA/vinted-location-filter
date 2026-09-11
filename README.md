@@ -120,6 +120,11 @@ Web Store expects. `dist/` is not tracked.
 definition, supersampled 8x8 per pixel so the edges are smooth at 16px. Run it
 from the repository root after changing the shape.
 
+## Privacy
+
+The extension collects nothing and sends nothing anywhere. See
+[PRIVACY.md](PRIVACY.md).
+
 ## Licence
 
 MIT, see [LICENSE](LICENSE).
