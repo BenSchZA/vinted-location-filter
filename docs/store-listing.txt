@@ -9,16 +9,17 @@ the results and in the toolbar popup, and both change the same setting. Results
 load as you scroll rather than page by page.
 
 The country comes from the currency the seller priced in, which is already in
-Vinted's search response, so filtering costs no extra requests. Checked against
-Vinted's seller records for 44 sellers with no mismatches.
+Vinted's search response, so filtering costs no extra requests.
 
 Limits: about eighteen markets price in euros, and there the currency cannot
 separate one country from another, so the country needs a slower per-seller
 lookup. City is off by default for the same reason, and sellers who leave it
 blank show the country only. A seller whose country cannot be read is tagged
-amber, never hidden.
+amber.
 
 No account, no analytics. It talks only to the Vinted site you have open and
 stores settings in your browser.
 
-https://github.com/BenSchZA/vinted-location-filter
+Free and open-source: https://github.com/BenSchZA/vinted-location-filter
+
+Buy me a coffee: https://buymeacoffee.com/benscholtz
